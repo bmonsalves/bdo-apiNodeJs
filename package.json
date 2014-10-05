@@ -1,0 +1,17 @@
+{
+  "name": "anotamela-api",
+  "version": "0.0.0",
+  "description": "pruebas de api",
+  "main": "server.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "author": "bmonsalves",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "express": "^4.9.5",
+    "mocha": "^1.21.4",
+    "supertest": "^0.13.0"
+  }
+}
