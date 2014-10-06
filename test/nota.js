@@ -8,5 +8,43 @@ request = request(host);
 
 describe('recurso /notas', function(){
 	//describe el contexto de la prueba inicial
+	describe('POST',function(){
+		it('deberia crear una nota nueva',function(done){
+			//crear solicitud http
+			//application/json
+			var data = {
+					    "nota": {
+					      "title": "nota 1",
+					      "description": "prueba de nota 1",
+					      "type": "js",
+					      "body": "cuerpo json nota"
+					    }
+					  };
+			request
+			    .post('/notas')
+			    .set('Accept', 'application/json')
+			    .send(data)
+			    .expect(201)
+			    .expect('Content-Type', /application\/json/)
+	        	.end(function(err, res) { //ejecuta de manera asincrona
+					var nota;
 
+					var body = res.body;
+					console.log('body', body);
+
+					// Nota existe
+					expect(body).to.have.property('nota');
+					nota = body.nota;
+
+					// Propiedades
+					expect(nota).to.have.property('title', 'nota 1');
+					expect(nota).to.have.property('description', 'prueba de nota 1');
+					expect(nota).to.have.property('type', 'js');
+					expect(nota).to.have.property('body', 'cuerpo json nota');
+					expect(nota).to.have.property('id');
+
+					done();
+			});
+		});
+	});
 });

@@ -1,28 +1,53 @@
-/**
+
 /**
  * Module dependencies
  */
 var express = require('express');
+var bodyParser = require('body-parser');
 //var logger = require('./lib/logger');
 
 /**
  * Locals
  */
-//var app = module.exports = express();
-//var port = process.env.PORT || 3000;
+var server = module.exports = express();
 
-/**
- * Start server if we're not someone else's dependency
- */
-//if (!module.parent) {
-//  app.listen(port, function() {
-//    logger.info('API escuchando en http://localhost:%s/', port);
-//  });
-//}
 
-var app = express();
+/*
+	MIDDLEWARE
+*/
+server.use(bodyParser.json({ type: 'application/json' }));
 
-app.listen(3000, function(){
-	console.log('corriendo');
+/*
+	ROUTES
+*/
+server.post('/notas',function(req, res){
+
+	//obtiene el json
+	console.log("POST", req.body);
+	//console.log(req.is('json'));
+
+	// manipulate request
+	var notaNueva = req.body.nota;
+	notaNueva.id = '123';
+
+	// prepare response
+	res.status(201);
+
+	// send response
+	res.send({
+	nota: notaNueva
+	});
 });
+
+
+/*
+START SERVER
+*/
+if (!module.parent) {
+	server.listen(3000, function(){
+		console.log('corriendo');
+	});
+}
+
+
 
