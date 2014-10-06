@@ -47,4 +47,42 @@ describe('recurso /notas', function(){
 			});
 		});
 	});
+
+	describe('GET',function(){
+		it('deberia obtener una nota existente',function(done){
+			//enviar nota
+			var data = {
+					    "nota": {
+					      "title": "nota 1",
+					      "description": "prueba de nota 1",
+					      "type": "js",
+					      "body": "cuerpo json nota"
+					    }
+					  };
+			request
+			    .post('/notas')
+			    .set('Accept', 'application/json')
+			    .send(data)
+			    .expect(201)
+			    .expect('Content-Type', /application\/json/)
+			    .end(function(err,res){
+			    	var id = res.body.nota.id;
+			    	
+			    	request
+			    		.get('/notas/'+id)
+			    		.expect(200)
+			    		.expect('Content-Type', /application\/json/)
+			    		.end(function(err, res){
+			    			var nota = res.body.notas;
+
+			    			expect(nota).to.have.property('title', 'nota 1');
+							expect(nota).to.have.property('description', 'prueba de nota 1');
+							expect(nota).to.have.property('type', 'js');
+							expect(nota).to.have.property('body', 'cuerpo json nota');
+							expect(nota).to.have.property('id',id);
+							done();
+			    		});
+			    });
+		});
+	});
 });

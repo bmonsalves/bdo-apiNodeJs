@@ -10,7 +10,7 @@ var bodyParser = require('body-parser');
  * Locals
  */
 var server = module.exports = express();
-
+var db = {};
 
 /*
 	MIDDLEWARE
@@ -28,7 +28,9 @@ server.post('/notas',function(req, res){
 
 	// manipulate request
 	var notaNueva = req.body.nota;
-	notaNueva.id = '123';
+	notaNueva.id = Date.now();
+
+	db[notaNueva.id] = notaNueva;
 
 	// prepare response
 	res.status(201);
@@ -36,6 +38,18 @@ server.post('/notas',function(req, res){
 	// send response
 	res.send({
 	nota: notaNueva
+	});
+});
+
+//parametro opcional :id? 
+server.get('/notas/:id?', function(req,res){
+	console.log('GET /notas/%s',req.params.id);
+
+	var id = req.params.id;
+	var nota = db[id];
+
+	res.json({
+		notas: nota
 	});
 });
 
