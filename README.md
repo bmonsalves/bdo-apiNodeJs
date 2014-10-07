@@ -1,23 +1,25 @@
 #instalar modulos
 npm install
 
-#test
+#EJECUTAR
+
+##test
 make test
 
-#ejecucion
+##ejecucion
 node server
 
-#para no reiniciar el server al hacer cambios
+##para no reiniciar el server al hacer cambios
 npm install -g nodemon
 nodemon server
 
-#puerto
+##puerto
 3000
 --------------------------
 
 #POSTMAN
 
-#POST nota de prueba
+##POST nota de prueba
 http://localhost:3000/notas
 {
 	"nota": {
@@ -28,5 +30,5 @@ http://localhost:3000/notas
 	}
 }
 
-#GET 
+##GET 
 http://localhost:3000/notas/<id_nota>
