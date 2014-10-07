@@ -1,5 +1,8 @@
-var request = require('supertest');
+var request = require('supertest-as-promised');
 var api = require('../server.js');
+var async = require('async');
+
+
 //corre las pruebas con diferentes hosts
 var host = process.env.API_TEST_HOST || api;
 
@@ -59,30 +62,37 @@ describe('recurso /notas', function(){
 					      "body": "cuerpo json nota"
 					    }
 					  };
-			request
-			    .post('/notas')
-			    .set('Accept', 'application/json')
-			    .send(data)
-			    .expect(201)
-			    .expect('Content-Type', /application\/json/)
-			    .end(function(err,res){
-			    	var id = res.body.nota.id;
-			    	
-			    	request
+			var id;
+
+			async.waterfall([
+				function createNote(cb){
+					request
+					    .post('/notas')
+					    .send(data)
+					    .expect(201)
+					    .end(cb)
+				},
+				function getNote(res,cb){
+					var id = res.body.nota.id;
+					request
 			    		.get('/notas/'+id)
 			    		.expect(200)
 			    		.expect('Content-Type', /application\/json/)
-			    		.end(function(err, res){
-			    			var nota = res.body.notas;
+			    		.end(cb)
+				},
+				function assertions(res,cb){
+					var nota = res.body.notas;
 
-			    			expect(nota).to.have.property('title', 'nota 1');
-							expect(nota).to.have.property('description', 'prueba de nota 1');
-							expect(nota).to.have.property('type', 'js');
-							expect(nota).to.have.property('body', 'cuerpo json nota');
-							expect(nota).to.have.property('id',id);
-							done();
-			    		});
-			    });
+	    			expect(nota).to.have.property('title', 'nota 1');
+					expect(nota).to.have.property('description', 'prueba de nota 1');
+					expect(nota).to.have.property('type', 'js');
+					expect(nota).to.have.property('body', 'cuerpo json nota');
+					expect(nota).to.have.property('id',id);
+					cb();
+				}
+			],done);
+
+			
 		});
 	});
 });
